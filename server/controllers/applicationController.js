@@ -38,4 +38,14 @@ const getJobApplicants = async(req, res) => {
     }
 };
 
-module.exports = {applyJob, getJobApplicants};
+//delete an application
+const deleteApplication = async(req, res) => {
+    try{
+        await Application.findByIdAndDelete(req.params.id);
+        res.json({message: "Application removes"});
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+};
+
+module.exports = {applyJob, getJobApplicants, deleteApplication,};

@@ -3,6 +3,10 @@ import axios from "axios";
 
 function Jobs(){
     const [jobs, setJobs] = useState([]);
+    const token = localStorage.getItem("token");
+    const payload = token
+        ? JSON.parse(atob(token.split(".")[1]))
+        : null
     useEffect(() => {
         const fetchJobs = async() => {
             const res = await axios.get(
@@ -15,7 +19,7 @@ function Jobs(){
 
 const applyJob = async(jobId) => {
     try{
-        const token = localStorage.getItem("token");
+        
 
         await axios.post(
             `http://localhost:5000/api/applications/${jobId}`,
@@ -39,7 +43,7 @@ return(
             Jobs
         </h1>
 
-        <div className="flex f;ex-col gap-4">
+        <div className="flex flex-col gap-4">
             {jobs.map((job) => (
                 <div
                     key={job._id}
@@ -52,12 +56,14 @@ return(
                     <p>{job.company}</p>
                     <p>{job.location}</p>
 
-                    <button
-                        onClick={() => applyJob(job._id)}
-                        className="bg-black text-white px-4 py-2 mt-3"
-                    >
-                        Apply
-                    </button>
+                    {payload?.role === "candidate" && (
+                        <button
+                            onClick={() => applyJob(job._id)}
+                            className="bg-black text-white px-4 py-2 mt-3"
+                        >
+                            Apply
+                        </button>
+                    )}
                 </div>
             ))}
         </div>

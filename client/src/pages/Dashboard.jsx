@@ -42,6 +42,7 @@ function Dashboard(){
                         </h2>
                         <p>{job.company}</p>
                         <p>{job.location}</p>
+                        <p>Applicants: {job.applicants}</p>
 
                         <Link
                             to={`/applicants/${job._id}`}

@@ -40,6 +40,24 @@ function Applicants(){
                     >
                         <p>{app.userId?.name}</p>
                         <p>{app.userId?.email}</p>
+
+                        <button
+                            onClick={async() => {
+                                const token=localStorage.getItem("token");
+                                await axios.delete(
+                                    `http://localhost:5000/api/applications/${app._id}`,
+                                    {
+                                        headers: {
+                                            Authorization: `Bearer ${token}`,
+                                        },
+                                    }
+                                );
+                                window.location.reload();
+                            }}
+                            className="bg-red-600 text-white px-3 py-1 mt-2"
+                        >
+                            Remove
+                        </button>
                     </div>
                 ))}
             </div>

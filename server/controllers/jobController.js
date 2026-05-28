@@ -1,4 +1,5 @@
 const Job = require("../models/Job");
+const Application = require("../models/Application");
 
 // create job
 const createJob = async(req, res) => {
@@ -67,8 +68,20 @@ const getRecruiterJobs = async(req, res) => {
     const jobs = await Job.find({
       postedBy: req.user.id.toString(),
     });
+    
+    const jobsWithCount = await Promise.all(
+      jobs.map(async (job) => {
+        const count = await Application.countDocuments({
+          jobId: job._id,
+        });
+        return{
+          ...job.toObject(),
+          applicants: count,
+        };
+      })
+    );
 
-    res.json(jobs);
+    res.json(jobsWithCount);
   }catch(error){
     res.status(500).json({
       message: error.message,
