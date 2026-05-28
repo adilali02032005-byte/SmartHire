@@ -15,7 +15,12 @@ const{
 const protect = require("../middleware/authMiddleware");
 
 //create job (protected)
-router.post("/", protect, roleCheck("recruiter"),createJob);
+router.post(
+    "/", 
+    protect, 
+    roleCheck("recruiter"),
+    createJob
+);
 
 //get all jobs
 router.get("/", getJobs);

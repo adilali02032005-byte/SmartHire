@@ -22,7 +22,7 @@ const applyJob = async(jobId) => {
             {},
             {
                 headers: {
-                    Authorization: `Nearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             }
         );

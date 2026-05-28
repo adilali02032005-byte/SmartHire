@@ -62,9 +62,10 @@ const searchJobs = async(req, res) => {
 };
 
 const getRecruiterJobs = async(req, res) => {
+  console.log(req.user);
   try{
     const jobs = await Job.find({
-      postedBy: req.user.id,
+      postedBy: req.user.id.toString(),
     });
 
     res.json(jobs);

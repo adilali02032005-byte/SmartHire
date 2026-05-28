@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreateJob from "./pages/CreateJob";
 import Dashboard from "./pages/Dashboard";
 import RecruiterRoute from "./components/RecruiterRoute";
+import Applicants from "./pages/Applicants";
 
 function App(){
   return(
@@ -39,6 +40,14 @@ function App(){
             element={
               <RecruiterRoute>
                 <Dashboard />
+              </RecruiterRoute>
+            }
+          />
+          <Route
+            path="/applicants/:id"
+            element={
+              <RecruiterRoute>
+                <Applicants />
               </RecruiterRoute>
             }
           />

@@ -61,6 +61,14 @@ function CreateJob(){
 
                 <input
                     type="text"
+                    name="company"
+                    placeholder="Company"
+                    onChange={handleChange}
+                    className="border p-2"
+                />
+
+                <input
+                    type="text"
                     name="location"
                     placeholder="Location"
                     onChange={handleChange}
