@@ -10,6 +10,8 @@ import CreateJob from "./pages/CreateJob";
 import Dashboard from "./pages/Dashboard";
 import RecruiterRoute from "./components/RecruiterRoute";
 import Applicants from "./pages/Applicants";
+import EditJob from "./pages/EditJob";
+import MyApplication from "./pages/MyApplications";
 
 function App(){
   return(
@@ -49,6 +51,22 @@ function App(){
               <RecruiterRoute>
                 <Applicants />
               </RecruiterRoute>
+            }
+          />
+          <Route 
+            path="/edit-job/:id"
+            element={
+              <RecruiterRoute>
+                <EditJob />
+              </RecruiterRoute>
+            }
+          />
+          <Route 
+            path="/my-applications"
+            element={
+              <ProtectedRoute>
+                <MyApplication />
+              </ProtectedRoute>
             }
           />
       </Routes>

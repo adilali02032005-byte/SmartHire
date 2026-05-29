@@ -48,4 +48,17 @@ const deleteApplication = async(req, res) => {
     }
 };
 
-module.exports = {applyJob, getJobApplicants, deleteApplication,};
+const getMyApplications = async(req, res) => {
+    try{
+        const applications = await Application.find({
+            userId: req.user.id,
+        }).populate("jobId");
+        res.json(applications);
+    }catch(error){
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+module.exports = {applyJob, getJobApplicants, deleteApplication, getMyApplications,};

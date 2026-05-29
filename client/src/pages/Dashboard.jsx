@@ -46,10 +46,33 @@ function Dashboard(){
 
                         <Link
                             to={`/applicants/${job._id}`}
-                            className="bg-black text-white px-4 py-2 inline-block mt-3"
+                            className="bg-black text-white px-4 py-2 inline-block mt-3 mr-2"
                         >
                             View Applicants
                         </Link>
+                        <Link
+                            to={`/edit-job/${job._id}`}
+                            className="bg-blue-600 text-white px-4 py-2 inline-block mt-2 mr-2"
+                        >
+                            Edit
+                        </Link>
+                        <button
+                            onClick={async() => {
+                                const token = localStorage.getItem("token");
+                                await axios.delete(
+                                    `http://localhost:5000/api/jobs/${job._id}`,
+                                    {
+                                        headers: {
+                                            Authorization: `Bearer ${token}`,
+                                        },
+                                    }
+                                );
+                                window.location.reload();
+                            }}
+                            className="bg-red-600 text-white px-4 py-2 mt-2"
+                        >
+                            Delete
+                        </button>
                     </div>
                 ))}
             </div>

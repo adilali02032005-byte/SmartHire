@@ -18,10 +18,15 @@ function Navbar(){
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
             <Link to="/jobs">Jobs</Link>
-            {payload?.role === "recruiter" && (
+            {payload?.role === "recruiter" &&(
                 <>
                     <Link to="/create-job">Post Job</Link>
                     <Link to="/dashboard">Dashboard</Link>
+                </>
+            )}
+            {payload?.role === "candidate" &&(
+                <>
+                    <Link to="/my-applications">My Applications</Link>
                 </>
             )}
             <button onClick = {logout}>

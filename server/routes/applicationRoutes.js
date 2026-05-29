@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const {applyJob, getJobApplicants, deleteApplication} = require("../controllers/applicationController");
+const {applyJob, getJobApplicants, deleteApplication, getMyApplications} = require("../controllers/applicationController");
 const protect = require("../middleware/authMiddleware");
 const roleCheck = require("../middleware/roleMiddleware");
+
+//candidate app history
+router.get("/my-applications", protect, roleCheck("candidate"), getMyApplications);
 
 //apply to job
 router.post("/:id", protect, roleCheck("candidate"), applyJob);
