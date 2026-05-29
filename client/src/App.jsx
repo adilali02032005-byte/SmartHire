@@ -14,6 +14,7 @@ import EditJob from "./pages/EditJob";
 import MyApplication from "./pages/MyApplications";
 import UploadResume from "./pages/UploadResume";
 import AIRecommendations from "./pages/AIRecommendations";
+import Recommendations from "./pages/Recommendations";
 
 function App(){
   return(
@@ -87,6 +88,7 @@ function App(){
               </ProtectedRoute>
             }
           />
+          <Route path="/recommendations" element={<Recommendations />} />
       </Routes>
     </BrowserRouter>
   );

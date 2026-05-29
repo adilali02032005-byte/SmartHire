@@ -2,46 +2,103 @@ import { useState } from "react";
 import axios from "axios";
 
 function AIRecommendations() {
-
   const [skills, setSkills] = useState("");
+  const [jobs, setJobs] = useState([]);
 
-  const [result, setResult] = useState("");
+  const applyJob = async (jobId) => {
+    if (!jobId) {
+      alert("Invalid job ID");
+      return;
+    }
 
-    const handleSubmit = async (e) => {
+    const token = localStorage.getItem("token");
 
-        e.preventDefault();
-
-        try{
-
-            const token = localStorage.getItem("token");
-
-            const res = await axios.post(
-                "http://localhost:5000/api/ai/recommend",
-                { skills },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            setResult(res.data.response);
-
-        }catch(error){
-
-            console.log(error);
-
-            alert(
-                error.response?.data?.message ||
-                "Something went wrong"
-            );
+    try {
+      await axios.post(
+        `http://localhost:5000/api/applications/${jobId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
 
+      alert("Applied successfully");
+    } catch (error) {
+      console.log(error);
+      alert("Failed to apply");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const jobRes = await axios.get(
+        "http://localhost:5000/api/jobs"
+      );
+
+      const realJobs = jobRes.data || [];
+
+      console.log("REAL JOBS:", realJobs);
+
+      const aiRes = await axios.post(
+        "http://localhost:5000/api/ai/recommend",
+        {
+          skills,
+          jobs: realJobs,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("AI RESPONSE:", aiRes.data.response);
+
+      const cleaned = aiRes.data.response
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      const parsed = JSON.parse(cleaned);
+
+      console.log("PARSED:", parsed);
+
+      const ranked = parsed.jobs
+        .map((aiJob) => {
+          const real = realJobs.find(
+            (j) =>
+              j.title?.toLowerCase() ===
+              aiJob.title?.toLowerCase()
+          );
+
+          if (!real) return null;
+
+          return {
+            ...real,
+            match: aiJob.match,
+            reason: aiJob.reason,
+          };
+        })
+        .filter(Boolean);
+
+      console.log("RANKED:", ranked);
+
+      setJobs(ranked);
+
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong");
+    }
+  };
 
   return (
     <div className="p-10">
-
       <h1 className="text-3xl font-bold mb-6">
         AI Job Recommendations
       </h1>
@@ -50,7 +107,6 @@ function AIRecommendations() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 max-w-md"
       >
-
         <textarea
           placeholder="Enter your skills"
           value={skills}
@@ -65,17 +121,35 @@ function AIRecommendations() {
         >
           Get Recommendations
         </button>
-
       </form>
 
-      {result && (
-        <div className="mt-6 border p-4 rounded">
-          <pre className="whitespace-pre-wrap">
-            {result}
-          </pre>
-        </div>
-      )}
+      <div className="mt-8 flex flex-col gap-4">
+        {jobs.map((job) => (
+          <div
+            key={job._id}
+            className="border p-4 rounded shadow"
+          >
+            <h2 className="text-xl font-bold">
+              {job.title}
+            </h2>
 
+            <span className="px-2 py-1 text-sm bg-gray-200 rounded">
+              {job.match}
+            </span>
+
+            <p className="mt-2">
+              {job.reason}
+            </p>
+
+            <button
+              className="mt-3 bg-black text-white px-4 py-2 cursor-pointer"
+              onClick={() => applyJob(job._id)}
+            >
+              Apply
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
