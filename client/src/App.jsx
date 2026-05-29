@@ -12,6 +12,7 @@ import RecruiterRoute from "./components/RecruiterRoute";
 import Applicants from "./pages/Applicants";
 import EditJob from "./pages/EditJob";
 import MyApplication from "./pages/MyApplications";
+import UploadResume from "./pages/UploadResume";
 
 function App(){
   return(
@@ -66,6 +67,14 @@ function App(){
             element={
               <ProtectedRoute>
                 <MyApplication />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/upload-resume"
+            element={
+              <ProtectedRoute>
+                <UploadResume />
               </ProtectedRoute>
             }
           />

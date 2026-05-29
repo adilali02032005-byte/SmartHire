@@ -91,7 +91,24 @@ const loginUser = async (req, res) => {
     }
 };
 
+const uploadResume = async(req, res) => {
+    try{
+        const user = await User.findById(req.user.id);
+        user.resume = req.file.path;
+        await user.save();
+        res.json({
+            message: "Resume uploaded",
+            path: req.file.path,
+        });
+    }catch(error){
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
+    uploadResume,
 };

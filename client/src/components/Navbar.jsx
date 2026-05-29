@@ -29,6 +29,11 @@ function Navbar(){
                     <Link to="/my-applications">My Applications</Link>
                 </>
             )}
+            {payload?.role === "candidate" &&(
+                <>
+                    <Link to="/upload-resume">Upload Resume</Link>
+                </>
+            )}
             <button onClick = {logout}>
                 Logout
             </button>
