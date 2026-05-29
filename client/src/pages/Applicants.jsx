@@ -54,7 +54,7 @@ function Applicants(){
                                 );
                                 window.location.reload();
                             }}
-                            className="bg-red-600 text-white px-3 py-1 mt-2"
+                            className="bg-red-600 text-white px-3 py-1 mt-2 cursor-pointer"
                         >
                             Remove
                         </button>

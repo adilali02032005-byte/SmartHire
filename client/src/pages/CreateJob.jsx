@@ -83,7 +83,7 @@ function CreateJob(){
                     className="border p-2"
                 />
 
-                <button className="bg-black text-white p-2">
+                <button className="bg-black text-white p-2 cursor-pointer">
                     Create Job
                 </button>
             </form>

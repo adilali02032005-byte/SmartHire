@@ -32,10 +32,12 @@ function UploadResume(){
                     type="file"
                     accept=".pdf"
                     onChange={(e) => setFile(e.target.files[0])}
-                      className="
+                    className="
                         border
                         p-2
                         rounded
+                        cursor-pointer
+                        file:cursor-pointer
                         file:bg-black
                         file:text-white
                         file:border-0
@@ -45,7 +47,7 @@ function UploadResume(){
                         file:rounded
                     "
                 />
-                <button className="bg-black text-white p-2">
+                <button className="bg-black text-white p-2 cursor-pointer">
                     Upload Resume
                 </button>
             </form>

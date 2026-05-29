@@ -13,6 +13,7 @@ import Applicants from "./pages/Applicants";
 import EditJob from "./pages/EditJob";
 import MyApplication from "./pages/MyApplications";
 import UploadResume from "./pages/UploadResume";
+import AIRecommendations from "./pages/AIRecommendations";
 
 function App(){
   return(
@@ -75,6 +76,14 @@ function App(){
             element={
               <ProtectedRoute>
                 <UploadResume />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/ai-recommendations"
+            element={
+              <ProtectedRoute>
+                <AIRecommendations />
               </ProtectedRoute>
             }
           />

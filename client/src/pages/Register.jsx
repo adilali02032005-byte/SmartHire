@@ -68,13 +68,13 @@ return(
                 <select
                     name="role"
                     onChange={handleChange}
-                    className="border p-2"
+                    className="border p-2 cursor-pointer"
                 >
                         <option value="candidate">Candidate</option>
                         <option value="recruiter">Recruiter</option>
                     </select>
 
-                    <button className="bg-black text-white p-2">
+                    <button className="bg-black text-white p-2 cursor-pointer">
                         Register
                     </button>
             </form>

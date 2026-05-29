@@ -59,7 +59,7 @@ return(
                     {payload?.role === "candidate" && (
                         <button
                             onClick={() => applyJob(job._id)}
-                            className="bg-black text-white px-4 py-2 mt-3"
+                            className="bg-black text-white px-4 py-2 mt-3 cursor-pointer"
                         >
                             Apply
                         </button>

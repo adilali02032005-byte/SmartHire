@@ -1,12 +1,12 @@
-const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config({ path: "./.env" });
+const express = require("express");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 const cors = require("cors");
-
-dotenv.config();
+const aiRoutes = require("./routes/aiRoutes");
 
 connectDB();
 
@@ -21,6 +21,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 
 app.use("/api/applications", applicationRoutes);
+
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
     res.send("API is running");
