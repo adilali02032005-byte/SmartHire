@@ -9,10 +9,10 @@ const roleCheck = require("../middleware/roleMiddleware");
 router.get("/my-applications", protect, roleCheck("candidate"), getMyApplications);
 
 //apply to job
-router.post("/:id", protect, roleCheck("candidate"), applyJob);
+router.post("/job/:id", protect, roleCheck("candidate"), applyJob);
 
 //view candidates
-router.get("/:id", protect, roleCheck("recruiter", "admin"), getJobApplicants);
+router.get("/job/:jobId", protect, roleCheck("recruiter", "admin"), getJobApplicants);
 
 //delete job
 router.delete("/:id", protect, roleCheck("recruiter"), deleteApplication);

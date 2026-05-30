@@ -31,7 +31,7 @@ function MyApplications(){
                         className="border p-4 rounded"
                     >
                         <h2 className="text-xl font-bold">
-                            {app.jobId?.title}
+                            {app.jobId?.title || "Job deleted"}
                         </h2>
                         <p>{app.jobId?.company}</p>
                         <p>{app.jobId?.location}</p>

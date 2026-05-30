@@ -68,9 +68,8 @@ function Recommendations() {
 
         const ranked = parsed.jobs
           .map((aiJob) => {
-            const real = realJobs.find(
-              (j) =>
-                j.title?.toLowerCase() === aiJob.title?.toLowerCase()
+            const real = realJobs.find((j) =>
+              j.title?.toLowerCase().includes(aiJob.title?.toLowerCase())
             );
 
             if (!real) return null;

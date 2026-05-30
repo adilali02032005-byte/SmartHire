@@ -58,14 +58,7 @@ function AIRecommendations() {
         }
       );
 
-      console.log("AI RESPONSE:", aiRes.data.response);
-
-      const cleaned = aiRes.data.response
-        .replace(/```json/g, "")
-        .replace(/```/g, "")
-        .trim();
-
-      const parsed = JSON.parse(cleaned);
+      const parsed = aiRes.data;
 
       console.log("PARSED:", parsed);
 

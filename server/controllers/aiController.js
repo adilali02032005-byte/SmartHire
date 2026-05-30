@@ -7,52 +7,62 @@ const getRecommendations = async (req, res) => {
     const { skills, jobs } = req.body;
 
     if (!jobs || jobs.length === 0) {
-      return res.json({
-        response: JSON.stringify({ jobs: [] }),
-      });
+      return res.json({ jobs: [] });
     }
 
     const model = genAI.getGenerativeModel({
-      model: "models/gemini-2.5-flash-lite",
+      model: "models/gemini-2.5-flash",
     });
 
     const prompt = `
-You are a job ranking system.
+      You are a job ranking system.
 
-RULES:
-- ONLY use provided jobs
-- return TOP 3 most relevant jobs
-- return ONLY valid JSON
+      Return ONLY valid JSON.
 
-Skills:
-${skills}
+      Skills:
+      ${skills}
 
-Jobs:
-${JSON.stringify(jobs)}
+      Jobs:
+      ${JSON.stringify(jobs)}
 
-Return format:
-{
-  "jobs": [
-    {
-      "title": "exact job title",
-      "match": "High | Medium | Low",
-      "reason": "short explanation"
-    }
-  ]
-}
-`;
+      Return format:
+      {
+        "jobs": [
+          {
+            "title": "exact job title",
+            "match": "High | Medium | Low",
+            "reason": "short explanation"
+          }
+        ]
+      }
+    `;
 
     const result = await model.generateContent(prompt);
+    let text = result.response.text();
 
-    let response = result.response.text();
+    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
 
-    response = response.replace(/```json/g, "").replace(/```/g, "").trim();
+    let parsed;
 
-    res.json({ response });
+    try {
+      parsed = JSON.parse(text);
+    } catch (err) {
+      console.log("JSON PARSE FAILED");
+      console.log(text);
+
+      return res.status(500).json({
+        message: "AI returned invalid JSON",
+        raw: text,
+      });
+    }
+
+    return res.json(parsed);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log("AI CONTROLLER ERROR:", error);
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };
-
 
 module.exports = { getRecommendations };

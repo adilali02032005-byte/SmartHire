@@ -1,120 +1,112 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-function Applicants(){
-    const [applications, setApplications] = useState([]);
-    const {id} = useParams();
+function Applicants() {
+  const { id: jobId } = useParams();
+  const [applications, setApplications] = useState([]);
+  const token = localStorage.getItem("token");
 
-    const shortlist = async (applicationId) => {
-        try {
-            const token = localStorage.getItem("token");
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/applications/job/${jobId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-            await axios.put(
-                `http://localhost:5000/api/applications/shortlist/${applicationId}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            alert("Candidate shortlisted");
-
-            window.location.reload();
-        } catch (error) {
-            console.log(error);
-        }
+        setApplications(res.data);
+      } catch (err) {
+        console.log("FETCH ERROR:", err.response?.data || err.message);
+      }
     };
 
-    useEffect(() => {
-        const fetchApplicants = async () => {
-            try{
-                const token = localStorage.getItem("token");
-                const res = await axios.get(
-                    `http://localhost:5000/api/applications/${id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                setApplications(res.data);
-            }catch(error){
-                console.log(error);
-            }
-        };
+    if (jobId) fetchApplicants();
+  }, [jobId]);
 
-        fetchApplicants();
-    }, [id]);
+  const shortlist = async (id) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/applications/shortlist/${id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    return(
-        <div className="p-10">
-            <h1 className="text-3xl font-bold mb-6">
-                Applicants
-            </h1>
+      setApplications((prev) =>
+        prev.map((a) =>
+          a._id === id ? { ...a, status: "shortlisted" } : a
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-            <div className="flex flex-col gap-4">
-                {applications.map((app) => (
-                    <div
-                        key={app._id}
-                        className="border p-4 rounded"
-                    >
-                        <p>{app.userId?.name}</p>
-                        <p>{app.userId?.email}</p>
-                        <p className="mt-2">Status: {app.status}</p>
-                        <a
-                            href={`http://localhost:5000/${app.userId.resume}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-500 mr-2"
-                            >
-                            View Resume
-                        </a>
+  const remove = async (id) => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/applications/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-                        <button
-                            onClick={async () => {
-                                const token = localStorage.getItem("token");
+      setApplications((prev) => prev.filter((a) => a._id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-                                await axios.put(
-                                `http://localhost:5000/api/applications/shortlist/${app._id}`,
-                                {},
-                                {
-                                    headers: {
-                                    Authorization: `Bearer ${token}`,
-                                    },
-                                }
-                                );
-                                window.location.reload();
-                            }}
-                            className="bg-green-600 text-white px-3 py-1 mt-2 mr-2 cursor-pointer"
-                        >
-                            Shortlist
-                        </button>
+  return (
+    <div className="p-10">
+      <h1 className="text-3xl font-bold mb-6">Applicants</h1>
 
-                        <button
-                            onClick={async() => {
-                                const token=localStorage.getItem("token");
-                                await axios.delete(
-                                    `http://localhost:5000/api/applications/${app._id}`,
-                                    {
-                                        headers: {
-                                            Authorization: `Bearer ${token}`,
-                                        },
-                                    }
-                                );
-                                window.location.reload();
-                            }}
-                            className="bg-red-600 text-white px-3 py-1 mt-2 cursor-pointer"
-                        >
-                            Remove
-                        </button>
-                    </div>
-                ))}
+      {applications.length === 0 ? (
+        <p>No applicants yet</p>
+      ) : (
+        applications.map((app) => (
+          <div key={app._id} className="border p-4 mb-3 rounded">
+
+            <p><b>{app.userId?.name}</b></p>
+            <p>{app.userId?.email}</p>
+            <p>Status: {app.status}</p>
+
+            {app.userId?.resume ? (
+              <a
+                href={`http://localhost:5000/uploads/${app.userId.resume}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline block mt-2"
+              >
+                View Resume
+              </a>
+            ) : (
+              <p className="text-gray-400 mt-2">No resume uploaded</p>
+            )}
+
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={() => shortlist(app._id)}
+                className="bg-green-600 text-white px-3 py-1 cursor-pointer"
+              >
+                Shortlist
+              </button>
+
+              <button
+                onClick={() => remove(app._id)}
+                className="bg-red-600 text-white px-3 py-1 cursor-pointer"
+              >
+                Remove
+              </button>
             </div>
-        </div>
-    );
+
+          </div>
+        ))
+      )}
+    </div>
+  );
 }
 
 export default Applicants;

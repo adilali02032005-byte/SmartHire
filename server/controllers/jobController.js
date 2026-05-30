@@ -25,7 +25,7 @@ const createJob = async(req, res) => {
 // get all jobs
 const getJobs = async(req, res) => {
   try{
-    const jobs = await Job.find().populate("postedBy", "name email");
+    const jobs = await Job.find().populate("postedBy", "name email").sort({ createdAt: -1 });
     res.json(jobs);
   }catch(error){
     res.status(500).json({message: error.message});
@@ -65,7 +65,7 @@ const searchJobs = async(req, res) => {
 const getRecruiterJobs = async(req, res) => {
   try{
     const jobs = await Job.find({
-      postedBy: req.user.id.toString(),
+      postedBy: req.user.id,
     });
     
     const jobsWithCount = await Promise.all(
@@ -108,16 +108,16 @@ const updateJob = async(req, res) => {
 };
 
 const deleteJob = async (req, res) => {
-  try{
+  try {
     const job = await Job.findById(req.params.id);
-
-    if(!job){
-      return res.status(404).json({message: "Job not found"});
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
     }
+    await Application.deleteMany({ jobId: req.params.id });
     await Job.findByIdAndDelete(req.params.id);
-    res.json({message: "Job deleted successfully"});
-  } catch(error){
-    res.status(500).json({message: error.message});
+    res.json({ message: "Job deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 

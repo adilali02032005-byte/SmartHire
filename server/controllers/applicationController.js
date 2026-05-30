@@ -1,82 +1,85 @@
 const Application = require("../models/Application");
 
-//apply for job
-const applyJob = async(req, res) => {
-    try{
-        const jobId = req.params.id;
-        const userId = req.user.id;
+const applyJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const userId = req.user.id;
 
-        //prevent duplicate applications
-        const alreadyApplied = await Application.findOne({jobId, userId});
+    const exists = await Application.findOne({ jobId, userId });
 
-        if(alreadyApplied){
-            return res.status(400).json({message: "Already applied"});
-        }
-        const application = await Application.create({
-        jobId,
-        userId,
-    });
+    if (exists) {
+      return res.status(400).json({ message: "Already applied" });
+    }
+
+    const application = await Application.create({ jobId, userId });
 
     res.status(201).json(application);
-    }catch(error){
-    res.status(500).json({message: error.message});
-    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-//get applicants for a job
-const getJobApplicants = async(req, res) => {
-    try{
-        const jobId = req.params.id;
+const getJobApplicants = async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
 
-        const applicants = await Application.find({jobId})
-        .populate("userId", "name email resume skills education phone")
-        .populate("jobId", "title company");
-        
-        res.json(applicants);
-    }catch(error){
-        res.status(500).json({message: error.message});
-    }
+    const applications = await Application.find({ jobId })
+      .populate("userId", "name email resume skills phone education")
+      .populate("jobId", "title company");
+
+    res.json(applications);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-//delete an application
-const deleteApplication = async(req, res) => {
-    try{
-        await Application.findByIdAndDelete(req.params.id);
-        res.json({message: "Application removes"});
-    }catch(error){
-        res.status(500).json({message: error.message});
-    }
+const deleteApplication = async (req, res) => {
+  try {
+    const applicationId = req.params.id;
+
+    await Application.findByIdAndDelete(applicationId);
+
+    res.json({ message: "Application removed" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-const getMyApplications = async(req, res) => {
-    try{
-        const applications = await Application.find({
-            userId: req.user.id,
-        }).populate("jobId");
-        res.json(applications);
-    }catch(error){
-        res.status(500).json({
-            message: error.message,
-        });
-    }
+const getMyApplications = async (req, res) => {
+  try {
+    const apps = await Application.find({ userId: req.user.id })
+      .populate({
+        path: "jobId",
+        select: "title company location",
+      });
+
+    const filtered = apps.filter(app => app.jobId !== null);
+
+    res.json(filtered);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const shortlistCandidate = async (req, res) => {
-  const application = await Application.findById(req.params.id);
+  try {
+    const app = await Application.findById(req.params.id);
 
-  if (!application) {
-    return res.status(404).json({
-      message: "Application not found",
-    });
+    if (!app) return res.status(404).json({ message: "Not found" });
+
+    app.status = "shortlisted";
+    await app.save();
+
+    res.json({ message: "Shortlisted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  application.status = "shortlisted";
-
-  await application.save();
-
-  res.json({
-    message: "Candidate shortlisted",
-  });
 };
 
-module.exports = {applyJob, getJobApplicants, deleteApplication, getMyApplications, shortlistCandidate,};
+module.exports = {
+  applyJob,
+  getJobApplicants,
+  deleteApplication,
+  getMyApplications,
+  shortlistCandidate,
+};

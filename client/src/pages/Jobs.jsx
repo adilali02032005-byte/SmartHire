@@ -22,7 +22,7 @@ const applyJob = async(jobId) => {
         
 
         await axios.post(
-            `http://localhost:5000/api/applications/${jobId}`,
+            `http://localhost:5000/api/applications/job/${jobId}`,
             {},
             {
                 headers: {
