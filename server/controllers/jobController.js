@@ -32,7 +32,7 @@ const getJobs = async(req, res) => {
   }
 };
 
-// get one job
+//get one job
 const getJob = async(req, res) => {
   try{
     const job = await Job.findById(req.params.id).populate(
