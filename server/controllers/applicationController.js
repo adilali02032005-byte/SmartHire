@@ -29,9 +29,9 @@ const getJobApplicants = async(req, res) => {
         const jobId = req.params.id;
 
         const applicants = await Application.find({jobId})
-        .populate("userId", "name email")
+        .populate("userId", "name email resume skills education phone")
         .populate("jobId", "title company");
-
+        
         res.json(applicants);
     }catch(error){
         res.status(500).json({message: error.message});
@@ -61,4 +61,22 @@ const getMyApplications = async(req, res) => {
     }
 };
 
-module.exports = {applyJob, getJobApplicants, deleteApplication, getMyApplications,};
+const shortlistCandidate = async (req, res) => {
+  const application = await Application.findById(req.params.id);
+
+  if (!application) {
+    return res.status(404).json({
+      message: "Application not found",
+    });
+  }
+
+  application.status = "shortlisted";
+
+  await application.save();
+
+  res.json({
+    message: "Candidate shortlisted",
+  });
+};
+
+module.exports = {applyJob, getJobApplicants, deleteApplication, getMyApplications, shortlistCandidate,};

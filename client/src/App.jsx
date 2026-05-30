@@ -15,6 +15,7 @@ import MyApplication from "./pages/MyApplications";
 import UploadResume from "./pages/UploadResume";
 import AIRecommendations from "./pages/AIRecommendations";
 import Recommendations from "./pages/Recommendations";
+import Profile from "./pages/Profile";
 
 function App(){
   return(
@@ -89,6 +90,14 @@ function App(){
             }
           />
           <Route path="/recommendations" element={<Recommendations />} />
+          <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
       </Routes>
     </BrowserRouter>
   );

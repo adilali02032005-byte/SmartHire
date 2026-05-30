@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {applyJob, getJobApplicants, deleteApplication, getMyApplications} = require("../controllers/applicationController");
+const {applyJob, getJobApplicants, deleteApplication, getMyApplications, shortlistCandidate} = require("../controllers/applicationController");
 const protect = require("../middleware/authMiddleware");
 const roleCheck = require("../middleware/roleMiddleware");
 
@@ -16,5 +16,8 @@ router.get("/:id", protect, roleCheck("recruiter", "admin"), getJobApplicants);
 
 //delete job
 router.delete("/:id", protect, roleCheck("recruiter"), deleteApplication);
+
+//short list candidates
+router.put("/shortlist/:id", protect, shortlistCandidate);
 
 module.exports = router;
