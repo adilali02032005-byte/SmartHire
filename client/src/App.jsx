@@ -17,6 +17,7 @@ import AIRecommendations from "./pages/AIRecommendations";
 import Recommendations from "./pages/Recommendations";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import Footer from "./components/Footer";
 
 function App(){
   return(
@@ -108,6 +109,7 @@ function App(){
               }
             />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

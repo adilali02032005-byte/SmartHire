@@ -15,26 +15,29 @@ const getRecommendations = async (req, res) => {
     });
 
     const prompt = `
-      You are a job ranking system.
+    You are a STRICT job FILTER.
 
-      Return ONLY valid JSON.
+    RULES:
+    - ONLY return relevant jobs
+    - REMOVE all irrelevant jobs
+    - DO NOT include Low/Medium/High
+    - If nothing matches, return empty array
 
-      Skills:
-      ${skills}
+    Skills:
+    ${skills}
 
-      Jobs:
-      ${JSON.stringify(jobs)}
+    Jobs:
+    ${JSON.stringify(jobs)}
 
-      Return format:
-      {
-        "jobs": [
-          {
-            "title": "exact job title",
-            "match": "High | Medium | Low",
-            "reason": "short explanation"
-          }
-        ]
-      }
+    Return ONLY valid JSON:
+    {
+      "jobs": [
+        {
+          "title": "exact job title",
+          "reason": "why it matches"
+        }
+      ]
+    }
     `;
 
     const result = await model.generateContent(prompt);
@@ -56,7 +59,20 @@ const getRecommendations = async (req, res) => {
       });
     }
 
-    return res.json(parsed);
+    const jobs = parsed.jobs || [];
+
+    if (jobs.length === 0) {
+      return res.json({
+        message: "No posted jobs currently match your skills",
+        jobs: [],
+      });
+    }
+
+    return res.json({
+      message: null,
+      jobs,
+    });
+
   } catch (error) {
     console.log("AI CONTROLLER ERROR:", error);
     return res.status(500).json({
@@ -65,4 +81,4 @@ const getRecommendations = async (req, res) => {
   }
 };
 
-module.exports = { getRecommendations };
+module.exports = {getRecommendations};

@@ -33,7 +33,6 @@ function Navbar(){
             {payload?.role === "candidate" &&(
                 <>
                     <Link to="/my-applications">My Applications</Link>
-                    <Link to="/upload-resume">Upload Resume</Link>
                     <Link to="/ai-recommendations">AI Recommendations</Link>
                     <Link to="/profile">Profile</Link>
                 </>
