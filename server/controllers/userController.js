@@ -25,7 +25,24 @@ const updateProfile = async (req, res) => {
   res.json(updatedUser);
 };
 
+const uploadResume = async(req, res) => {
+    try{
+        const user = await User.findById(req.user.id);
+        user.resume = req.file.filename;
+        await user.save();
+        res.json({
+            message: "Resume uploaded",
+            path: req.file.filename,
+        });
+    }catch(error){
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
+  uploadResume,
 };
