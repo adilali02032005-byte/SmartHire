@@ -38,6 +38,9 @@ function Navbar(){
                     <Link to="/profile">Profile</Link>
                 </>
             )}
+            {payload?.role === "admin" && (
+                <Link to="/admin">Admin Dashboard</Link>
+            )}
             {!token ?(
                 <Link to="/login">Login</Link>
             ):(

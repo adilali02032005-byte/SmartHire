@@ -16,6 +16,7 @@ import UploadResume from "./pages/UploadResume";
 import AIRecommendations from "./pages/AIRecommendations";
 import Recommendations from "./pages/Recommendations";
 import Profile from "./pages/Profile";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App(){
   return(
@@ -95,6 +96,14 @@ function App(){
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route 
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />

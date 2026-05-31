@@ -9,6 +9,7 @@ const cors = require("cors");
 const aiRoutes = require("./routes/aiRoutes");
 const userRoutes = require("./routes/userRoutes");
 const path = require("path");
+const adminRoutes = require("./routes/adminRoutes");
 
 connectDB();
 
@@ -22,6 +23,8 @@ app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"))
 );
+
+app.use("/api/admin", adminRoutes);
 
 app.use("/api/auth", authRoutes);
 
