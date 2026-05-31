@@ -4,6 +4,7 @@ import axios from "axios";
 function AIRecommendations() {
   const [skills, setSkills] = useState("");
   const [jobs, setJobs] = useState([]);
+  const [message, setMessage] = useState("");
 
   const applyJob = async (jobId) => {
     if (!jobId) {
@@ -33,18 +34,14 @@ function AIRecommendations() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
+      setMessage("");
+      setJobs([]);
       const token = localStorage.getItem("token");
-
       const jobRes = await axios.get(
         "http://localhost:5000/api/jobs"
       );
-
       const realJobs = jobRes.data || [];
-
-      console.log("REAL JOBS:", realJobs);
-
       const aiRes = await axios.post(
         "http://localhost:5000/api/ai/recommend",
         {
@@ -58,33 +55,16 @@ function AIRecommendations() {
         }
       );
 
-      const parsed = aiRes.data;
+      const data = aiRes.data;
 
-      console.log("PARSED:", parsed);
+      setMessage(data.message || "");
 
-      const ranked = parsed.jobs
-        .map((aiJob) => {
-          const real = realJobs.find(
-            (j) =>
-              j.title?.toLowerCase() ===
-              aiJob.title?.toLowerCase()
-          );
-
-          if (!real) return null;
-
-          return {
-            ...real,
-            match: aiJob.match,
-            reason: aiJob.reason,
-          };
-        })
-        .filter(Boolean);
-
-      console.log("RANKED:", ranked);
-
-      setJobs(ranked);
-
-    } catch (error) {
+      if(!data.jobs || data.jobs.length === 0){
+        setJobs([]);
+        return;
+      }
+      setJobs(data.jobs);
+    }catch(error){
       console.log(error);
       alert("Something went wrong");
     }
@@ -117,22 +97,20 @@ function AIRecommendations() {
       </form>
 
       <div className="mt-8 flex flex-col gap-4">
-        {jobs.map((job) => (
-          <div
-            key={job._id}
-            className="border p-4 rounded shadow"
-          >
-            <h2 className="text-xl font-bold">
-              {job.title}
-            </h2>
+
+        {message && jobs.length === 0 &&(
+          <p className="text-gray-500 mb-4">{message}</p>
+        )}
+
+        {jobs.map((job, index) => (
+          <div key={job._id || index} className="border p-4 rounded shadow">
+            <h2 className="text-xl font-bold">{job.title}</h2>
 
             <span className="px-2 py-1 text-sm bg-gray-200 rounded">
-              {job.match}
+              {job.match || "Matched"}
             </span>
 
-            <p className="mt-2">
-              {job.reason}
-            </p>
+            <p className="mt-2">{job.reason}</p>
 
             <button
               className="mt-3 bg-black text-white px-4 py-2 cursor-pointer"
@@ -142,6 +120,7 @@ function AIRecommendations() {
             </button>
           </div>
         ))}
+
       </div>
     </div>
   );

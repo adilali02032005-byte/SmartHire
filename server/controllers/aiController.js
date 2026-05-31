@@ -34,6 +34,7 @@ const getRecommendations = async (req, res) => {
       "jobs": [
         {
           "title": "exact job title",
+          "match": "High | Medium",
           "reason": "why it matches"
         }
       ]
@@ -59,9 +60,9 @@ const getRecommendations = async (req, res) => {
       });
     }
 
-    const jobs = parsed.jobs || [];
+    const aiJobs = parsed.jobs || [];
 
-    if (jobs.length === 0) {
+    if (!aiJobs || aiJobs.length === 0) {
       return res.json({
         message: "No posted jobs currently match your skills",
         jobs: [],
@@ -70,7 +71,7 @@ const getRecommendations = async (req, res) => {
 
     return res.json({
       message: null,
-      jobs,
+      jobs: aiJobs,
     });
 
   } catch (error) {
