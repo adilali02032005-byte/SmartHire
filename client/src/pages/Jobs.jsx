@@ -85,6 +85,22 @@ return (
               <p>{job.company}</p>
               <p>{job.location}</p>
 
+              {job.type && (
+                <p><b>Type:</b>{job.type}</p>
+              )}
+
+              {job.salary && (
+                <p><b>Salary:</b>{job.salary}</p>
+              )}
+
+              {job.description && (
+                <p className="text-sm text-gray-500 mt-2">{job.description}</p>
+              )}
+
+              {job.postedBy?.name && (
+                <p className="text-sm text-gray-500 mt-2">Posted by: {job.postedBy.name}</p>
+              )}
+
               {payload?.role === "candidate" &&
                 (appliedJobs.includes(job._id) ? (
                   <button
