@@ -22,7 +22,7 @@ function AIRecommendations() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       alert("Applied successfully");
@@ -39,7 +39,7 @@ function AIRecommendations() {
       setJobs([]);
       const token = localStorage.getItem("token");
       const jobRes = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/jobs`
+        `${import.meta.env.VITE_API_URL}/api/jobs`,
       );
       const realJobs = jobRes.data || [];
       const aiRes = await axios.post(
@@ -52,19 +52,38 @@ function AIRecommendations() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = aiRes.data;
 
       setMessage(data.message || "");
 
-      if(!data.jobs || data.jobs.length === 0){
+      if (!data.jobs || data.jobs.length === 0) {
         setJobs([]);
         return;
       }
-      setJobs(data.jobs);
-    }catch(error){
+
+      const merged = (data.jobs || [])
+        .map((aiJob) => {
+          const real = realJobs.find(
+            (j) =>
+              j.title?.toLowerCase().trim() ===
+              aiJob.title?.toLowerCase().trim(),
+          );
+
+          if (!real) return null;
+
+          return {
+            ...real, 
+            reason: aiJob.reason,
+            match: aiJob.match || "Matched",
+          };
+        })
+        .filter(Boolean);
+
+      setJobs(merged);
+    } catch (error) {
       console.log(error);
       alert("Something went wrong");
     }
@@ -72,38 +91,28 @@ function AIRecommendations() {
 
   return (
     <div className="p-10">
-      <h1 className="text-3xl font-bold mb-6">
-        AI Job Recommendations
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">AI Job Recommendations</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 max-w-md"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md">
         <textarea
           placeholder="Enter your skills"
           value={skills}
-          onChange={(e) =>
-            setSkills(e.target.value)
-          }
+          onChange={(e) => setSkills(e.target.value)}
           className="border p-2"
         />
 
-        <button
-          className="bg-black text-white p-2 cursor-pointer"
-        >
+        <button className="bg-black text-white p-2 cursor-pointer">
           Get Recommendations
         </button>
       </form>
 
       <div className="mt-8 flex flex-col gap-4">
-
-        {message && jobs.length === 0 &&(
+        {message && jobs.length === 0 && (
           <p className="text-gray-500 mb-4">{message}</p>
         )}
 
         {jobs.map((job, index) => (
-          <div key={job._id || index} className="border p-4 rounded shadow">
+          <div key={job._id} className="border p-4 rounded shadow">
             <h2 className="text-xl font-bold">{job.title}</h2>
 
             <span className="px-2 py-1 text-sm bg-gray-200 rounded">
@@ -120,7 +129,6 @@ function AIRecommendations() {
             </button>
           </div>
         ))}
-
       </div>
     </div>
   );
