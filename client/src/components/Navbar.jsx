@@ -1,7 +1,7 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Navbar(){
-
+    const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const payload = token
         ? JSON.parse(atob(token.split(".")[1]))
@@ -9,7 +9,7 @@ function Navbar(){
 
     const logout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    navigate("/login");
     };
 
     return(
