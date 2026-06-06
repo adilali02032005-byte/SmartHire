@@ -11,7 +11,7 @@ function Applicants() {
     const fetchApplicants = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/applications/job/${jobId}`,
+          `${import.meta.env.VITE_API_URL}/api/applications/job/${jobId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -29,7 +29,7 @@ function Applicants() {
   const shortlist = async (id) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/applications/shortlist/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/applications/shortlist/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -47,7 +47,7 @@ function Applicants() {
   const remove = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/applications/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/applications/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -75,7 +75,7 @@ function Applicants() {
 
             {app.userId?.resume ? (
               <a
-                href={`http://localhost:5000/uploads/${app.userId.resume}`}
+                href={`${import.meta.env.VITE_API_URL}/uploads/${app.userId.resume}`}
                 target="_blank"
                 rel="noreferrer"
                 className="text-blue-500 underline block mt-2"

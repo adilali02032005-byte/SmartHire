@@ -15,7 +15,7 @@ function Recommendations() {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/applications/${jobId}`,
+        `${import.meta.env.VITE_API_URL}/api/applications/${jobId}`,
         {},
         {
           headers: {
@@ -36,11 +36,11 @@ function Recommendations() {
       const token = localStorage.getItem("token");
 
       try {
-        const jobRes = await axios.get("http://localhost:5000/api/jobs");
+        const jobRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/jobs`);
         const realJobs = jobRes.data.jobs || [];
         console.log("REAL JOBS:", realJobs);
         const aiRes = await axios.post(
-          "http://localhost:5000/api/ai/recommend",
+          `${import.meta.env.VITE_API_URL}/api/ai/recommend`,
           {
             skills: "React Node MongoDB",
             jobs: realJobs,

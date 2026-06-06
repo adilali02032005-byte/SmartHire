@@ -15,7 +15,7 @@ function Profile() {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "http://localhost:5000/api/users/profile",
+        `${import.meta.env.VITE_API_URL}/api/users/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -35,7 +35,7 @@ function Profile() {
     const token = localStorage.getItem("token");
 
     await axios.put(
-      "http://localhost:5000/api/users/profile",
+      `${import.meta.env.VITE_API_URL}/api/users/profile`,
       form,
       {
         headers: {
@@ -108,7 +108,7 @@ function Profile() {
           </button>
           {form.resume && (
             <a
-              href={`http://localhost:5000/uploads/${form.resume}`}
+              href={`${import.meta.env.VITE_API_URL}/uploads/${form.resume}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-600 text-white p-2 inline-block mt-4 text-center"

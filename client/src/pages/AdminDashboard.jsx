@@ -9,7 +9,7 @@ function AdminDashboard(){
         const fetchStats = async() => {
             const token = localStorage.getItem("token");
             const res= await axios.get(
-                "http://localhost:5000/api/admin/stats",
+                `${import.meta.env.VITE_API_URL}/api/admin/stats`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -18,7 +18,7 @@ function AdminDashboard(){
             );
             setStats(res.data);
             const usersRes = await axios.get(
-                "http://localhost:5000/api/admin/users",
+                `${import.meta.env.VITE_API_URL}/api/admin/users`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -37,7 +37,7 @@ function AdminDashboard(){
             if (!window.confirm("Delete this user?")) return;
 
             await axios.delete(
-                `http://localhost:5000/api/admin/users/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/admin/users/${id}`,
                 {
                 headers: {
                     Authorization: `Bearer ${token}`,

@@ -16,7 +16,7 @@ function AIRecommendations() {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/applications/${jobId}`,
+        `${import.meta.env.VITE_API_URL}/api/applications/${jobId}`,
         {},
         {
           headers: {
@@ -39,11 +39,11 @@ function AIRecommendations() {
       setJobs([]);
       const token = localStorage.getItem("token");
       const jobRes = await axios.get(
-        "http://localhost:5000/api/jobs"
+        `${import.meta.env.VITE_API_URL}/api/jobs`
       );
       const realJobs = jobRes.data || [];
       const aiRes = await axios.post(
-        "http://localhost:5000/api/ai/recommend",
+        `${import.meta.env.VITE_API_URL}/api/ai/recommend`,
         {
           skills,
           jobs: realJobs,

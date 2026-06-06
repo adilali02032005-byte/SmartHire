@@ -12,14 +12,14 @@ function Jobs(){
         const fetchJobs = async () => {
         try {
             const jobsRes = await axios.get(
-            "http://localhost:5000/api/jobs"
+            `${import.meta.env.VITE_API_URL}/api/jobs`
             );
 
             setJobs(jobsRes.data);
 
             if (payload?.role === "candidate") {
                 const appsRes = await axios.get(
-                    "http://localhost:5000/api/applications/my-applications",
+                    `${import.meta.env.VITE_API_URL}/api/applications/my-applications`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ function Jobs(){
 const applyJob = async(jobId) => {
     try{
         await axios.post(
-            `http://localhost:5000/api/applications/job/${jobId}`,
+            `${import.meta.env.VITE_API_URL}/api/applications/job/${jobId}`,
             {},
             {
                 headers: {

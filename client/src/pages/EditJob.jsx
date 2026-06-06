@@ -17,7 +17,7 @@ function EditJob(){
     useEffect(() => {
         const fetchJob = async() => {
             const res = await axios.get(
-                `http://localhost:5000/api/jobs/${id}`
+                `${import.meta.env.VITE_API_URL}/api/jobs/${id}`
             );
             setFormData(res.data);
         };
@@ -35,7 +35,7 @@ function EditJob(){
         e.preventDefault();
         const token = localStorage.getItem("token");
         await axios.put(
-            `http://localhost:5000/api/jobs/${id}`,
+            `${import.meta.env.VITE_API_URL}/api/jobs/${id}`,
             formData,
             {
                 headers: {
