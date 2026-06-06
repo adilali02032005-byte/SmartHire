@@ -16,7 +16,7 @@ function AIRecommendations() {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/applications/${jobId}`,
+        `${import.meta.env.VITE_API_URL}/api/applications/job/${jobId}`,
         {},
         {
           headers: {
